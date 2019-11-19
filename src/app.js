@@ -17,7 +17,7 @@ app.use(notesRouter);
 app.use(folderRouter);
 
 app.get('/api/', (req, res) => {
-    res.send('Hello, boilerplate!')
+    res.send('Hello, from noteful!')
 });
 
 app.use(function errorHandler(error, req, res, next) {

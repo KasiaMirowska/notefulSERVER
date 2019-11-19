@@ -11,6 +11,7 @@ const serializeNote = (note) => {
         name: xss(note.name),
         content: xss(note.content),
         date_created: note.date_created,
+        folder: note.folder
     })
 };
 
@@ -34,7 +35,7 @@ notesRouter
                 return res.status(404).send({error: {message: `Missing ${key}`}})
             }
         };
-        console.log(newNote, 'JJJJJJJJJJ')
+        
         NotesService.insertNote(knexInstance, newNote)
             .then(note => {
                 res
