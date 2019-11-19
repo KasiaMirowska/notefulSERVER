@@ -27,9 +27,9 @@ notesRouter
     })
     .post(jsonParser, (req, res, next) => {
         const knexInstance = req.app.get('db');
-        const { name, content, date_created, folder } = req.body;
-        const newNote = { name, content, date_created, folder };
-
+        const { name, content, folder } = req.body;
+        const newNote = { name, content, folder };
+        console.log(newNote,'HERHEREHREHREH')
         for(const [key, value] of Object.entries(newNote)) {
             if(value == null) {
                 return res.status(404).send({error: {message: `Missing ${key}`}})

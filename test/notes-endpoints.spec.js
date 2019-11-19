@@ -1,56 +1,34 @@
-const app = require('../src/app');
-const knex = require('knex');
-const { TEST_DB_URL } = require('../src/config');
-const { makeNotesArray, makeMaliciousNote } = require('./notes-fixtures');
-const { makeFoldersArray } = require('./folders-fixtures');
-
+const getTests = require('./notesGET.spec');
+const getIdTests = require('./notesGET-ID.spec');
+const postTests = require('./notesPOST.spec');
 
 describe.only('Notes endpoints', function() {
-    let db;
-
-    before('make knex instance', () => {
-        db = knex({
-            client: 'pg',
-            connection: TEST_DB_URL
-        })
-        app.set('db',db);
-    });
     
-
-    after('disconnect from db', () => db.destroy());
-    before('clean the table', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
-    afterEach('clean up', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
-
-    describe('GET /notes', () => {
-        context('given no notes', () => {
-            it('returns status 200 and an empty array', ()=> {
-                console.log()
-                return supertest(app)
-                    .get('/api/notes')
-                    .expect(200, [])
-            })
-        })
-
-        context('Given notes in db', () => {
-            const testNotes = makeNotesArray();
-            const testFolder = makeFoldersArray()
-
-            beforeEach('insert articles', () => {
-                return db 
-                    .into('folder')
-                    .insert(testFolder)
-                    .then(() => {
-                        return db
-                            .into('notes')
-                            .insert(testNotes)
-                    })
-            })
-            it('returns 200 and all the notes', () => {
-                return supertest(app)
-                    .get('/api/notes')
-                    .expect(200, testNotes)
-            })
-        })
+    describe.skip('GET /notes', () => {
+        getTests.emptyDB();
+        getTests.notesInsideDB();
+        getTests.xssAttack();
+        
+    })
+    
+    describe('POST/notes', () => {
+        postTests.insertNote();
+        postTests.missingField()
+        postTests.xssAttack();
     })
 
+    describe.skip('GET /notes/note_id', () => {
+        getIdTests.emptyDB();
+        getIdTests.notesInsideDB();
+        getIdTests.xssAttack();
+    })
+
+    describe.skip('PATCH/notes/note_id',() => {
+
+    })
+
+    describe.skip('DELETE/notes/note_id', () => {
+
+    })
+    
 })

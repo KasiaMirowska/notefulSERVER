@@ -26,14 +26,16 @@ function makeNotesArray() {
 function makeMaliciousNote() {
     const maliciousNote = {
         id: 911,
-        date_published: new Date().toISOString(),
-        title: 'Naughty naughty very naughty <script>alert("xss");</script>',
-        content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`
+        date_created: new Date().toISOString(),
+        name: 'Naughty naughty very naughty <script>alert("xss");</script>',
+        content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+        folder: 1
       }
       const expectedNote = {
         ...maliciousNote,
-        title: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
-        content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+        name: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+        content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
+        folder: 1
       }
       return {
         maliciousNote,
