@@ -77,8 +77,8 @@ notesRouter
             const knexInstance = req.app.get('db');
             const idToUpdate = req.params.note_id;
             const {name, content, date_created, folder} = req.body;
-            const updatedNote = {name, content, date_created, folder};
-
+            const updatedNote = {id:idToUpdate, name, content, date_created, folder};
+            
             const numberOfValues = Object.values(updatedNote).filter(Boolean).length
             if(numberOfValues === 0){
             return res.status(400).json({

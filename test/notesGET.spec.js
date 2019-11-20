@@ -23,7 +23,6 @@ const getTests = {
     emptyDB: () => {
         context('given no notes', () => {
             it('returns status 200 and an empty array', ()=> {
-                console.log()
                 return supertest(app)
                     .get('/api/notes')
                     .expect(200, [])
