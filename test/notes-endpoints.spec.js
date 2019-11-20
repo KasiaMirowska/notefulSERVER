@@ -2,6 +2,7 @@ const getTests = require('./notesGET.spec');
 const getIdTests = require('./notesGET-ID.spec');
 const postTests = require('./notesPOST.spec');
 const patchTests = require('./notesPATCH.spec');
+const deleteTests = require('./notesDELETE.spec');
 
 describe.only('Notes endpoints', function() {
     
@@ -24,15 +25,14 @@ describe.only('Notes endpoints', function() {
         getIdTests.xssAttack();
     })
 
-    describe.only('PATCH/notes/note_id',() => {
+    describe('PATCH/notes/note_id',() => {
         patchTests.emptyDB();
-        patchTests.notesInsideDB();
-        // patchTests.wrongFields();
-        // patchTests.extraFields();
+        patchTests.notesInsideDB(); //issues with 2 tests in here
     })
 
-    // describe.skip('DELETE/notes/note_id', () => {
-
-    // })
+    describe.only('DELETE/notes/note_id', () => {
+        deleteTests.emptyDB()
+        deleteTests.notesInsideDB()
+     })
     
 })

@@ -4,21 +4,21 @@ function makeNotesArray() {
             id: 1,
             name: 'First test note!',
             content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-            date_created: '2029-01-22T16:28:32.615Z',
+            date_created: '2019-01-22T16:28:32.615Z',
             folder: 2
         },
         {
             id: 2,
             name: 'test note!',
             content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-            date_created: '2029-01-22T16:28:32.615Z',
+            date_created: '2019-01-22T16:28:32.615Z',
             folder: 1
         },
         {
             id: 3,
             name: 'test note 3!',
             content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
-            date_created: '2029-01-22T16:28:32.615Z',
+            date_created: '2019-01-22T16:28:32.615Z',
             folder: 1
         }
     ]

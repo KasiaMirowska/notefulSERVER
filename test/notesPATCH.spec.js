@@ -31,6 +31,7 @@ const patchTests = {
             })
         })
     },
+
     notesInsideDB: () => {
         context('Given notes in db', () => {
             const testNotes = makeNotesArray();
@@ -48,31 +49,55 @@ const patchTests = {
             it('returns 200 and updates note', () => {
                 const noteId = 2;
                 const updatedFields = {
+                    id: String(noteId),
                     name: 'update test',
                     content: 'drfgjhkl',
-                    date_created: testNotes[noteId-1].date_created,
+                    date_created: testNotes[noteId - 1].date_created,
                     folder: 2
                 }
                 const expectedNote = {
                     ...testNotes[noteId - 1],
                     ...updatedFields
                 }
-
                 return supertest(app)
                     .patch(`/api/notes/${noteId}`)
                     .send(updatedFields)
                     .expect(200)
-                    .expect(res => { 
-                        expect(res.body).to.have.property('id')
-                        expect(res.body.name).to.eql(expectedNote.name)
-                        expect(res.body.content).to.eql(expectedNote.content)
-                        expect(res.body.folder).to.eql(expectedNote.folder) 
-                        
+                    .expect(res => {
+                        expect(res.body).to.eql(expectedNote)
                     })
             })
-        })
 
-    }
+            it('responds with an error when no required field supplied', () => {
+                const idToUpdate = 2;
+                const updatedFields = {}
+                return supertest(app)
+                    .patch(`/api/notes/${idToUpdate}`)
+                    .send(updatedFields)
+                    .expect(400, { error: { message: `Must contain only note name, content or folder id` } })
+            })
+            
+            it('updates only a subset of fields', () => {
+                const idToUpdate = 3
+                const updatedNote = { title: 'updated title'}
+                const expectedNote = {
+                  ...testNotes[idToUpdate - 1],
+                  ...updatedNote
+                }
+        
+                return supertest(app)
+                  .patch(`/api/notes/${idToUpdate}`)
+                  .send({...updatedNote, fieldToIgnore: 'should not be in GET res'})
+                  .expect(204)
+                  .then(res => {
+                    supertest(app)
+                      .get(`/api/articles/${idToUpdate}`)
+                      .expect(expectedArticle)
+                  })
+              })
+        })
+    },
+
 }
 
 module.exports = patchTests;
