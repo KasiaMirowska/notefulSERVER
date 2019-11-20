@@ -18,8 +18,7 @@ before('make knex instance', () => {
 after('disconnect from db', () => db.destroy());
 before('clean the table', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
 afterEach('clean up', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
-const testFolder = makeFoldersArray();
-const testNotes = makeNotesArray();
+
 
 const deleteTests = {
     emptyDB: () => {
@@ -35,7 +34,8 @@ const deleteTests = {
 
     notesInsideDB: () => {
         context('Given notes in db', () => {
-           
+            const testFolder = makeFoldersArray();
+            const testNotes = makeNotesArray();
             before('insert data', () => {
                 return db
                     .insert(testFolder)

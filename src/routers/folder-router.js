@@ -1,16 +1,16 @@
 const express = require('express');
 const folderRouter = express.Router();
 const jsonParser = express.json();
-const xss = require('xss');
+//const xss = require('xss');
 const path = require('path');
 const FolderService = require('../services/folder-service');
 
-const serializeFolder = (folder) => {
-    return ({
-        id: folder.id,
-        name: xss(folder.name)
-    })
-};
+// const serializeFolder = (folder) => {
+//     return ({
+//         id: folder.id,
+//         name: xss(folder.name)
+//     })
+// };
 
 folderRouter
     .route('/api/folder')
@@ -18,7 +18,7 @@ folderRouter
         const knexInstance = req.app.get('db');
         FolderService.getAllFolders(knexInstance)
             .then(folders => {
-                res.status(200).json(folders.map(serializeFolder))
+                res.status(200).json(folders)
             })
             .catch(next)
     })
@@ -26,17 +26,17 @@ folderRouter
         const knexInstance = req.app.get('db');
         const { name } = req.body;
         const newFolder = { name };
-
+        
         if (!name) {
             return res.status(404).send({ error: { message: 'Missing folder name' } })
         }
-
+       
         FolderService.insertFolder(knexInstance, newFolder)
-            .then(folder => {
+            .then(newFolder => {
                 res
-                    .status(200)
-                    .location(path.posix.join(req.originalUrl, `/${folder.id}`))
-                    .json(serializeFolder(folder))
+                    .status(201)
+                    .location(path.posix.join(req.originalUrl, `/${newFolder.id}`))
+                    .json(newFolder)
             })
             .catch(next)
     })
@@ -57,7 +57,7 @@ folderRouter
             .catch(next)
     })
     .get((req, res, next) => {
-        res.status(200).json(serializeNote(res.folder))
+        res.status(200).json(res.folder)
     })
     .delete((req, res, next) => {
         const knexInstance = req.app.get('db');
@@ -71,15 +71,16 @@ folderRouter
     .patch(jsonParser, (req, res, next) => {
         const knexInstance = req.app.get('db');
         const idToUpdate = req.params.folder_id;
-        const { name } = req.body;
-        const updatedFolder = {name};
+        const name = req.body.name;
+        const updatedFolder = { id: idToUpdate, name };
+        
         if(!name) {
             return res.status(404).send({error: {message: 'Missing name'}})
         }
         
         FolderService.updateFolder(knexInstance, idToUpdate, updatedFolder)
             .then(() => {
-                res.status(200).send(serializeFolder(updatedFolder))
+                res.status(200).send(updatedFolder)
             })
             .catch(next)
     })

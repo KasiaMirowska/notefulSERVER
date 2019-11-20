@@ -4,7 +4,7 @@ const postTests = require('./notesPOST.spec');
 const patchTests = require('./notesPATCH.spec');
 const deleteTests = require('./notesDELETE.spec');
 
-describe.only('Notes endpoints', function() {
+describe.skip('Notes endpoints', function() {
     
     describe('GET /notes', () => {
         getTests.emptyDB();
@@ -30,7 +30,7 @@ describe.only('Notes endpoints', function() {
         patchTests.notesInsideDB(); //issues with 2 tests in here
     })
 
-    describe.only('DELETE/notes/note_id', () => {
+    describe('DELETE/notes/note_id', () => {
         deleteTests.emptyDB()
         deleteTests.notesInsideDB()
      })
