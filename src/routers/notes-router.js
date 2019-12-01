@@ -12,29 +12,32 @@ const serializeNote = (note) => {
         content: xss(note.content),
         date_created: note.date_created,
         folder: note.folder
-    })
+    });
 };
 
 notesRouter
-    .route('/api/notes')
+    .route('/api/noteful/notes')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db');
         NotesService.getAllNotes(knexInstance)
             .then(notes => {
-                res.status(200).json(notes.map(serializeNote))
+                res.status(200).json(notes.map(serializeNote));
             })
-            .catch(next)
+            .catch(next);
     })
     .post(jsonParser, (req, res, next) => {
         const knexInstance = req.app.get('db');
         const { name, content, folder } = req.body;
-        const newNote = { name, content, folder };
-        console.log(newNote, 'HERHEREHREHREH')
+        const newNote = { 
+            name: name, 
+            content: content, 
+            folder: folder };
+        
         for (const [key, value] of Object.entries(newNote)) {
             if (value == null) {
-                return res.status(404).send({ error: { message: `Missing ${key}` } })
+                return res.status(404).send({ error: { message: `Missing ${key}` } });
             }
-        };
+        }
 
         NotesService.insertNote(knexInstance, newNote)
             .then(note => {
@@ -43,33 +46,33 @@ notesRouter
                     .location(path.posix.join(req.originalUrl, `/${note.id}`))
                     .json(serializeNote(note))
             })
-            .catch(next)
-    })
+            .catch(next);
+    });
 
 notesRouter
-    .route('/api/notes/:note_id')
+    .route('/api/noteful/notes/:note_id')
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
         const id = req.params.note_id;
         NotesService.getNoteById(knexInstance, id)
             .then(note => {
                 if (!note) {
-                    return res.status(404).send({ error: { message: `Note with id ${id} doesn't exist` } })
+                    return res.status(404).send({ error: { message: `Note with id ${id} doesn't exist` } });
                 }
                 res.note = note;
-                next()
+                next();
             })
-            .catch(next)
+            .catch(next);
     })
     .get((req, res, next) => {
-        res.status(200).json(serializeNote(res.note))
+        res.status(200).json(serializeNote(res.note));
     })
     .delete((req, res, next) => {
         const knexInstance = req.app.get('db');
         const idToRemove = req.params.note_id;
         NotesService.deleteNote(knexInstance, idToRemove)
             .then(() => {
-                res.status(204).end()
+                res.status(204).send(`deleted note ${idToRemove}`);
             })
             .catch(next)
     })
@@ -78,20 +81,19 @@ notesRouter
         const idToUpdate = req.params.note_id;
         const { name, content, date_created, folder } = req.body;
         const updatedNote = { id:idToUpdate, name, content, date_created, folder };
-        console.log(req.body, 'AAAAAAAAAAA')
+        
         const numberOfValues = Object.values(updatedNote).filter(Boolean).length
         if (numberOfValues === 0 ) {
-            console.log(req.body, 'FFFFFFFFFF')//doesnt get in here at all
             return res.status(400).json({
                 error: { message: 'Must contain only note name, content or folder id' }
-            })
+            });
         }
 
         NotesService.updateNote(knexInstance, idToUpdate, updatedNote)
             .then(() => {
-                res.status(200).json(serializeNote(updatedNote))
+                res.status(200).json(serializeNote(updatedNote));
             })
-            .catch(next)
-    })
+            .catch(next);
+    });
 
 module.exports = notesRouter;

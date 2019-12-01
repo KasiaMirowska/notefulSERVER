@@ -4,35 +4,36 @@ const postTests = require('./notesPOST.spec');
 const patchTests = require('./notesPATCH.spec');
 const deleteTests = require('./notesDELETE.spec');
 
-describe.skip('Notes endpoints', function() {
+describe('Notes endpoints', function() {
     
-    describe('GET /notes', () => {
+    describe('GET /noteful/notes', () => {
         getTests.emptyDB();
         getTests.notesInsideDB();
         getTests.xssAttack();
         
-    })
+    });
     
-    describe('POST/notes', () => {
+    describe('POST /noteful/notes', () => {
         postTests.insertNote();
-        postTests.missingField()
+        postTests.missingField();
         postTests.xssAttack();
-    })
+    });
 
-    describe('GET /notes/note_id', () => {
+    describe('GET /noteful/notes/note_id', () => {
         getIdTests.emptyDB();
         getIdTests.notesInsideDB();
         getIdTests.xssAttack();
-    })
+    });
 
-    describe('PATCH/notes/note_id',() => {
+    describe('PATCH /noteful/notes/note_id',() => {
         patchTests.emptyDB();
         patchTests.notesInsideDB(); //issues with 2 tests in here
-    })
+    });
 
-    describe('DELETE/notes/note_id', () => {
-        deleteTests.emptyDB()
-        deleteTests.notesInsideDB()
-     })
+    describe('DELETE /noteful/notes/note_id', () => {
+        deleteTests.emptyDB();
+        deleteTests.notesInsideDB();
     
-})
+    });
+    
+});

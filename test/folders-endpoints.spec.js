@@ -18,12 +18,12 @@ after('disconnect from db', () => db.destroy());
 before('clean the table', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
 afterEach('clean up', () => db.raw('TRUNCATE notes, folder RESTART IDENTITY CASCADE'));
 
-describe.only('Folder endpoints', () => {
+describe('Folder endpoints', () => {
     describe('GET/folder', () => {
         context('given no folders in db', () => {
             it('returns empty array', () => {
                 return supertest(app)
-                    .get('/api/folder')
+                    .get('/api/noteful/folder')
                     .expect(200, [])
             })
         })
@@ -38,7 +38,7 @@ describe.only('Folder endpoints', () => {
 
             it('returns all the folders', () => {
                 return supertest(app)
-                    .get('/api/folder')
+                    .get('/api/noteful/folder')
                     .expect(200, testFolders)
             })
 
@@ -49,17 +49,17 @@ describe.only('Folder endpoints', () => {
         it('returns 200 and posted folder', () => {
             const newFolder = { name: 'new name' }
             return supertest(app)
-                .post('/api/folder')
+                .post('/api/noteful/folder')
                 .send(newFolder)
                 .expect(201)
                 .expect(res => {
                     expect(res.body.name).to.eql(newFolder.name)
                     expect(res.body).to.have.property('id')
-                    expect(res.headers.location).to.eql(`/api/folder/${res.body.id}`)
+                    expect(res.headers.location).to.eql(`/api/noteful/folder/${res.body.id}`)
                 })
                 .then(res => {
                     return supertest(app)
-                        .get(`/api/folder/${res.body.id}`)
+                        .get(`/api/noteful/folder/${res.body.id}`)
                         .expect(res.body)
                 })
         })
@@ -69,7 +69,7 @@ describe.only('Folder endpoints', () => {
             it('returns an error', () => {
                 const folderID = 4;
                 return supertest(app)
-                    .get(`/api/folder/${folderID}`)
+                    .get(`/api/noteful/folder/${folderID}`)
                     .expect(404, { error: { message: `Folder with id ${folderID} doesn't exist` } })
             })
         })
@@ -84,7 +84,7 @@ describe.only('Folder endpoints', () => {
             it('returns specified folder', () => {
                 const folderId = 1;
                 return supertest(app)
-                    .get(`/api/folder/${folderId}`)
+                    .get(`/api/noteful/folder/${folderId}`)
                     .expect(200)
                     .expect(res => {
                         expect(res.body).to.eql(testFolders[folderId - 1])
@@ -98,7 +98,7 @@ describe.only('Folder endpoints', () => {
             it('returns error', () => {
                 const folderId = 2;
                 return supertest(app)
-                    .delete(`/api/folder/${folderId}`)
+                    .delete(`/api/noteful/folder/${folderId}`)
                     .expect(404, { error: { message: `Folder with id ${folderId} doesn't exist` } })
             })
         })
@@ -113,11 +113,11 @@ describe.only('Folder endpoints', () => {
                 const folderId = 2;
                 const expectedFolders = testFolders.filter(folder => folder.id !== folderId)
                 return supertest(app)
-                    .delete(`/api/folder/${folderId}`)
+                    .delete(`/api/noteful/folder/${folderId}`)
                     .expect(204)
                     .then(() => {
                         return supertest(app)
-                            .get('/api/folder')
+                            .get('/api/noteful/folder')
                             .expect(res => {
                                 expect(res.body).to.eql(expectedFolders)
                             })
@@ -130,7 +130,7 @@ describe.only('Folder endpoints', () => {
             it('returns an error', () => {
                 const folderId = 2;
                 return supertest(app)
-                    .patch(`/api/folder/${folderId}`)
+                    .patch(`/api/noteful/folder/${folderId}`)
                     .expect(404, {error: {message: `Folder with id ${folderId} doesn't exist`}})
             })
         })
@@ -149,7 +149,7 @@ describe.only('Folder endpoints', () => {
                     ...updatedFolder
                 }
                 return supertest(app)
-                    .patch(`/api/folder/${idToUpdate}`)
+                    .patch(`/api/noteful/folder/${idToUpdate}`)
                     .send(updatedFolder)
                     .expect(200)
                     .expect(res => {
@@ -164,7 +164,7 @@ describe.only('Folder endpoints', () => {
                     ...updatedFolder
                 }
                 return supertest(app)
-                    .patch(`/api/folder/${idToUpdate}`)
+                    .patch(`/api/noteful/folder/${idToUpdate}`)
                     .send({...updatedFolder, b: 'ignored property'})
                     .expect(200)
                     .expect(res => {

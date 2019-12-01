@@ -24,7 +24,7 @@ const getTests = {
         context('given no notes', () => {
             it('returns status 200 and an empty array', ()=> {
                 return supertest(app)
-                    .get('/api/notes')
+                    .get('/api/noteful/notes')
                     .expect(200, [])
             })
         })
@@ -46,7 +46,7 @@ const getTests = {
             })
             it('returns 200 and all the notes', () => {
                 return supertest(app)
-                    .get('/api/notes')
+                    .get('/api/noteful/notes')
                     .expect(200, testNotes)
             })
         })
@@ -67,7 +67,7 @@ const getTests = {
             })
             it('removes xss attack content', () => {
                 return supertest(app)
-                    .get('/api/notes')
+                    .get('/api/noteful/notes')
                     .expect(200)
                     .expect(res => {
                         expect(res.body[0].name).to.eql(expectedNote.name)

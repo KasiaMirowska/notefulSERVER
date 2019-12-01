@@ -26,7 +26,7 @@ const deleteTests = {
             it('returns 404 and an error message',() => {
                 const noteId = 2;
                 return supertest(app)
-                    .delete(`/api/notes/${noteId}`)
+                    .delete(`/api/noteful/notes/${noteId}`)
                     .expect(404, {error: {message: `Note with id ${noteId} doesn't exist`}})
             })
         })
@@ -50,11 +50,11 @@ const deleteTests = {
                 const noteId = 2;
                 const expectedNotes = testNotes.filter(note => note.id !== noteId)
                 return supertest(app)
-                    .delete(`/api/notes/${noteId}`)
+                    .delete(`/api/noteful/notes/${noteId}`)
                     .expect(204)
                     .then(res => {
                         return supertest(app)
-                            .get('/api/notes')
+                            .get('/api/noteful/notes')
                             .expect(expectedNotes)
                     })
 

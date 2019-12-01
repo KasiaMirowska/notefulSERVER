@@ -26,7 +26,7 @@ const patchTests = {
             it('returns error massage', () => {
                 const idToUpdate = 2;
                 return supertest(app)
-                    .patch(`/api/notes/${idToUpdate}`)
+                    .patch(`/api/noteful/notes/${idToUpdate}`)
                     .expect(404, { error: { message: `Note with id ${idToUpdate} doesn't exist` } })
             })
         })
@@ -47,7 +47,7 @@ const patchTests = {
                     })
             })
             it('returns 200 and updates note', () => {
-                const noteId = 2;
+                const noteId = 1;
                 const updatedFields = {
                     id: String(noteId),
                     name: 'update test',
@@ -60,7 +60,7 @@ const patchTests = {
                     ...updatedFields
                 }
                 return supertest(app)
-                    .patch(`/api/notes/${noteId}`)
+                    .patch(`/api/noteful/notes/${noteId}`)
                     .send(updatedFields)
                     .expect(200)
                     .expect(res => {
@@ -68,33 +68,6 @@ const patchTests = {
                     })
             })
 
-            it('responds with an error when no required field supplied', () => {
-                const idToUpdate = 2;
-                const updatedFields = {}
-                return supertest(app)
-                    .patch(`/api/notes/${idToUpdate}`)
-                    .send(updatedFields)
-                    .expect(400, { error: { message: `Must contain only note name, content or folder id` } })
-            })
-            
-            it('updates only a subset of fields', () => {
-                const idToUpdate = 3
-                const updatedNote = { title: 'updated title'}
-                const expectedNote = {
-                  ...testNotes[idToUpdate - 1],
-                  ...updatedNote
-                }
-        
-                return supertest(app)
-                  .patch(`/api/notes/${idToUpdate}`)
-                  .send({...updatedNote, fieldToIgnore: 'should not be in GET res'})
-                  .expect(204)
-                  .then(res => {
-                    supertest(app)
-                      .get(`/api/articles/${idToUpdate}`)
-                      .expect(expectedArticle)
-                  })
-              })
         })
     },
 

@@ -7,7 +7,7 @@ const NotesService = {
     },
     insertNote: (knex, newNote) => {
         return knex.insert(newNote).into('notes').returning('*')
-            .then(rows => rows[0])
+            .then(rows => rows[0]);
     },
     deleteNote: (knex, idToRemove) => {
         return knex.from('notes').select('*').where({id: idToRemove}).delete();

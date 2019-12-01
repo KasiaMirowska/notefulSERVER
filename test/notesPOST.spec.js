@@ -36,7 +36,7 @@ const postTests = {
             }
 
             return supertest(app)
-                .post('/api/notes')
+                .post('/api/noteful/notes')
                 .send(newNote)
                 .expect(201)
                 .expect(res => {
@@ -44,14 +44,14 @@ const postTests = {
                     expect(res.body.content).to.eql(newNote.content)
                     expect(res.body.folder).to.eql(newNote.folder)
                     expect(res.body).to.have.property('id')
-                    expect(res.headers.location).to.eql(`/api/notes/${res.body.id}`)
+                    expect(res.headers.location).to.eql(`/api/noteful/notes/${res.body.id}`)
                     const expected = new Date().toLocaleString()
                     const actual = new Date(res.body.date_created).toLocaleString()
                     expect(actual).to.eql(expected)
                 })
                 .then(res => {
                     supertest(app)
-                        .get(`/api/notes/${res.body.id}`)
+                        .get(`/api/noteful/notes/${res.body.id}`)
                         .expect(res.body)
                 })
         })
@@ -67,7 +67,7 @@ const postTests = {
             it('responds with error if field missing', () => {
                 delete newNote[field]
                 return supertest(app)
-                    .post('/api/notes/')
+                    .post('/api/noteful/notes/')
                     .send(newNote)
                     .expect(404, {error: {message: `Missing ${field}`}})
             })
@@ -77,7 +77,7 @@ const postTests = {
         it('removes xss attack content', () => {
             const {maliciousNote, expectedNote } = makeMaliciousNote();
             return supertest(app)
-                .post('/api/notes')
+                .post('/api/noteful/notes')
                 .send(maliciousNote)
                 .expect(201)
                 .expect(res => {

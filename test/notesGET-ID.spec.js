@@ -26,7 +26,7 @@ const getIdTests = {
             const idToFind = 2
             it('returns 404 and an error', () => {
                 return supertest(app)
-                    .get(`/api/notes/${idToFind}`)
+                    .get(`/api/noteful/notes/${idToFind}`)
                     .expect(404, { error: { message: `Note with id ${idToFind} doesn't exist` } })
             })
         })
@@ -50,7 +50,7 @@ const getIdTests = {
             })
             it('returns 200 and selected note', () => {
                 return supertest(app)
-                    .get(`/api/notes/${idToFind}`)
+                    .get(`/api/noteful/notes/${idToFind}`)
                     .expect(200)
                     .expect(res => {
                         expect(res.body).to.eql(testNotes[idToFind - 1])
@@ -74,7 +74,7 @@ const getIdTests = {
             })
             it('removes the attack', () => {
                 return supertest(app)
-                    .get(`/api/notes/${maliciousNote.id}`)
+                    .get(`/api/noteful/notes/${maliciousNote.id}`)
                     .expect(200)
                     .expect(res => {
                         expect(res.body.name).to.eql(expectedNote.name)

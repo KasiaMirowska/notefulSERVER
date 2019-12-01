@@ -13,7 +13,7 @@ const FolderService = require('../services/folder-service');
 // };
 
 folderRouter
-    .route('/api/folder')
+    .route('/api/noteful/folder')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db');
         FolderService.getAllFolders(knexInstance)
@@ -42,7 +42,7 @@ folderRouter
     })
 
 folderRouter
-    .route('/api/folder/:folder_id')
+    .route('/api/noteful/folder/:folder_id')
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
         const id = req.params.folder_id;
