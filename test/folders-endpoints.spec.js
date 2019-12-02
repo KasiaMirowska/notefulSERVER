@@ -1,6 +1,6 @@
 const app = require('../src/app');
 const knex = require('knex');
-const { TEST_DB_URL } = require('../src/config');
+const { TEST_DATABASE_URL } = require('../src/config');
 const { makeFoldersArray } = require('./folders-fixtures');
 const { makeNotesArray } = require('./notes-fixtures');
 let db;
@@ -8,7 +8,7 @@ let db;
 before('make knex instance', () => {
     db = knex({
         client: 'pg',
-        connection: TEST_DB_URL
+        connection: TEST_DATABASE_URL
     })
     app.set('db', db);
 });
