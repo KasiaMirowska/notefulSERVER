@@ -28,6 +28,7 @@ folderRouter
         const newFolder = { name };
         
         if (!name) {
+            console.log( name, 'HHHHHHHHHHH')
             return res.status(404).send({ error: { message: 'Missing folder name' } })
         }
        
